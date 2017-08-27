@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>进阶：导航拦截方法</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+        <script src="https://cdn.bootcss.com/vue-router/2.7.0/vue-router.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <router-link :to="/a">链接1</router-link>
+            <router-link :to="/ab">链接2</router-link>
+            <router-view></router-view>
+        </div>
+    <script>
+        const cp_a = {
+            template:'<div>cp_a</div>',
+            beforeRouteEnter(to, from, next){
+                console.log('组件独享钩子beforeRouteEnter',to,from);
+                next();
+            },
+            beforeRouterUpdate(to,from,next){
+                console.log('组件独享钩子beforeRouterUpdate',to,from);
+                next();
+            },
+            beforeRouteLeave (to, from, next) {
+                // 导航离开该组件的对应路由时调用
+                console.log('组件独享钩子beforeRouteLeave',to,from);
+                next();
+            }
+        }
+        const cp_b ={
+            template:'<div>cp_b</div>'
+        }
+    const router = new VueRouter({
+        routes:[
+            {path:'/a',redirect:'b'},//重定向到B
+            {
+                path:'/b',
+                component:cp_a,
+                //路由独享钩子
+                beforeEnter: (to, from, next) => {
+                    console.log('路由独享钩子',to,from);
+                    next();
+                }
+            },{
+                path:'/c',
+                redirect:to =>{
+                    console.log(to);
+                    //解析 to 对象 根据相应条件判断进入相应路由，返回可以是对象 或路径
+                    return {path:'/b'};
+                }
+            },{
+                path:'/ab',
+                component:cp_b,
+                alias:'/ba'
+            }
+        ]
+    });
+    router.beforeEach((to,from,next)=>{
+        debugger;
+        console.log('这里是全局路由的钩子',to,from,next);
+        next();
+    })
+    const app = new Vue({
+        router,el:'#app',
+    });
+    </script>
+    </body>
+</html>

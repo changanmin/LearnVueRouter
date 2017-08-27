@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>动态路由匹配</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--<script src="https://unpkg.com/vue"></script>
+        <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>-->
+    </head>
+    <body>
+        <div id="app">
+            <h1>hello App!! 动态路由匹配</h1>
+            <p>
+                <!--router-link： 为vue-router 的组件，通过它可以实现导航 最后会渲染为html 的 a 标签
+                to：指定链接路径-->
+                <router-link to="/foo">Go to Foo</router-link>
+                <router-link to="/bar">Go to Bar</router-link>
+                <router-link to="/user/param01">Go to User-1</router-link>
+                <router-link to="/user/param02">Go to User-2</router-link>
+            </p>
+            <!--路由器出口  路由匹配到的组件将渲染到这里 -->
+            <router-view></router-view>
+        </div>
+    </body>
+     <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+     <script src="https://cdn.bootcss.com/vue-router/2.7.0/vue-router.min.js"></script>
+   <script>
+            const Foo = {
+                template:'<div>foo page</div>'
+            }
+            const Bar = {
+                template:'<div>bar page</div>'
+            }
+            const User = {
+                template:'<div> 动态路由配置{{this.$route.params.userName}}</div>',
+                watch:{
+                    $route(to,from){
+                        console.log(to,from);
+                    }
+                }
+            }
+            const routes = [
+                { path : '/foo' ,component : Foo},
+                { path :'/bar',component:Bar},
+                { path : '/user/:userName',component:User}
+            ]
+            const router = new VueRouter({
+                routes
+            });
+            const app = new Vue({
+                router,
+                el:'#app'
+            })
+        </script>
+</html>

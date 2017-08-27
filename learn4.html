@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>命名视图、重定向、别名</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+        <script src="https://cdn.bootcss.com/vue-router/2.7.0/vue-router.min.js"></script>
+        <style>
+            .view-one{
+                width: 50px;
+                height: 100%;
+                color: #ffffff;
+                background-color: #000;
+                /*这里定义侧边栏*/
+            }
+            .view-two{
+                height: 50px;
+                width: 100px;
+                background-color: red;
+            }
+            .view-three{
+                width: 100%;
+                height: 100%;
+                background-color: #ffffff;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <!--通过路由name导航-->
+            <router-link :to="{name : 'user', params : { id : 123 }}">goUser</router-link>
+            <!--命名视图 给router-view 增加name 属性 ，然后通过名字可以选择组件渲染位置 class 用来做布局位置 
+                业务需求：
+                    解决同时展示多个视图，并且无关联，独立与其他视图，非嵌套的形式
+            -->
+            <router-view class="view-one"></router-view>
+            <router-view class="view-two" name="layout-a"></router-view>
+            <router-view class="view-three" name="layout-b"></router-view>
+        </div>
+        <script>
+            'use strict';
+            console.log('编程式导航与命名路由');
+            const User = {
+                template:'<div><h2>User {{$route.params.id}}</h2><router-view></router-view></div>'
+            }
+            const UserHome ={
+                template:'<div>this is UserHome page</div>'
+            }
+            const UserProfile ={
+                template:'<div>this is UserProfile page</div>'
+            }
+            const UserPosts ={
+                template:'<div>this is UserPosts page</div>'
+            }
+            const Layout_A={
+                template:'<div> AAA </div>'
+            }
+            const Layout_B={
+                template:'<div> BBB </div>'
+            }
+            const Layout_C={
+                template:'<div> CCC </div>'
+            }
+            const router = new VueRouter({
+                routes:[
+                    {
+                        name:'layout',
+                        path:'/',
+                        components:{
+                            default:Layout_A,
+                            'layout-a':Layout_B,
+                            'layout-b':Layout_C
+                        }
+                    },
+                    {
+                        path:'/user/:id',
+                        name:'user',
+                        
+                        component:User
+                    }
+                ]
+            });
+            const app = new Vue({
+                router,el:'#app',
+                methods:{
+                    goHome(){
+                        router.push({name:'user',params:{id:'ilike'}});
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

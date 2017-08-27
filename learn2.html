@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>嵌套路由</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+        <script src="https://cdn.bootcss.com/vue-router/2.7.0/vue-router.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <p>
+                <router-link to="/user/foo">/user/foo</router-link>
+                <router-link to="/user/foo/profile">/user/foo/profile</router-link>
+                <router-link to="/user/foo/posts">/user/foo/posts</router-link>
+            </p>
+            <router-view></router-view>
+        </div>
+        <script>
+            'use strict';
+            console.log('这里是嵌套路由learn page');
+            const User = {
+                template:'<div><h2>User {{$route.params.id}}</h2><router-view></router-view></div>'
+            }
+            const UserHome ={
+                template:'<div>this is UserHome page</div>'
+            }
+            const UserProfile ={
+                template:'<div>this is UserProfile page</div>'
+            }
+            const UserPosts ={
+                template:'<div>this is UserPosts page</div>'
+            }
+            const router = new VueRouter({
+                routes:[
+                    {
+                        path:'/user/:id',
+                        component:User,
+                        children:[
+                            {
+                                path:"",
+                                component:UserHome
+                            },
+                            {
+                                path:'profile',
+                                component:UserProfile
+                            },{
+                                path:'posts',
+                                component:UserPosts
+                            }
+
+                        ]
+                    }
+                ]
+            });
+            const app = new Vue({
+                router,el:'#app'
+            })
+        </script>
+    </body>
+</html>

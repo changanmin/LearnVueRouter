@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>重定向和别名</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+        <script src="https://cdn.bootcss.com/vue-router/2.7.0/vue-router.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <router-view></router-view>
+        </div>
+    <script>
+        const cp_a = {
+            template:'<div>cp_a</div>'
+        }
+        const cp_b ={
+            template:'<div>cp_b</div>'
+        }
+    const router = new VueRouter({
+        routes:[
+            {path:'/a',redirect:'b'},//重定向到B
+            {
+                path:'/b',
+                component:cp_a
+            },{
+                path:'/c',
+                redirect:to =>{
+                    console.log(to);
+                    //解析 to 对象 根据相应条件判断进入相应路由，返回可以是对象 或路径
+                    return {path:'/b'};
+                }
+            },{
+                path:'/ab',
+                component:cp_b,
+                alias:'/ba'
+            }
+        ]
+    });
+    const app = new Vue({
+        router,el:'#app',
+    });
+    </script>
+    </body>
+</html>
